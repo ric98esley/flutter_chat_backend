@@ -18,20 +18,20 @@ const crearUsuario = async (req, res = response ) => {
         }
 
         // Encriptar contrasena
-        const usuario = new User(req.body);
+        const user = new User(req.body);
         const salt = bcrypt.genSaltSync();
-        usuario.password = bcrypt.hashSync( password, salt );
+        user.password = bcrypt.hashSync( password, salt );
 
 
-        await usuario.save();
+        await user.save();
         // generar mi JWT
-        const token = await generatorJWT(usuario.id);
+        const token = await generatorJWT(user.id);
 
 
         res.json({
             ok: true,
-            usuario,
-            token,
+            user: user,
+            token: token,
             msg: 'Usuario Creado!!'
         })
     } catch (error) {
@@ -54,7 +54,7 @@ const login = async (req, res = response) =>{
                 'ok':  false,
                 'msg': "Email no registrado"
             })
-        
+
         }
         const validPassword = bcrypt.compareSync(password, usuarioDB.password)
         if(!validPassword){
@@ -69,7 +69,7 @@ const login = async (req, res = response) =>{
             ok: true,
             msg: 'Login',
             token,
-            usuario: usuarioDB
+            user: usuarioDB
         })
     } catch (error) {
         console.log(error);
